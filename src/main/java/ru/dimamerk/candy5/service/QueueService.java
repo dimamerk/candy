@@ -14,6 +14,8 @@ public class QueueService {
 
     private PriorityBlockingQueue<CandyType> queue;
 
+    private boolean added = false;
+
     QueueService() {
         Comparator<CandyType> candyTypeComparator = Comparator.comparingInt(CandyType::getOrder);
 
@@ -23,19 +25,10 @@ public class QueueService {
     public void pushToQueue(CandyType candyType) {
         try {
             queue.add(candyType);
+            added = true;
             LOGGER.info("Добавлена " + candyType.getTitle() + " конфета. Всего конфет: " + queue.size());
         } catch (Exception e) {
             LOGGER.error("Не удалось добавить конфету");
-        }
-    }
-
-    public void logQueue() {
-        try {
-            while (!queue.isEmpty()) {
-                System.out.println(queue.take());
-            }
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage());
         }
     }
 
@@ -51,5 +44,13 @@ public class QueueService {
         }
 
         return null;
+    }
+
+    public boolean isAdded() {
+        return added;
+    }
+
+    public void setAdded(boolean added) {
+        this.added = added;
     }
 }

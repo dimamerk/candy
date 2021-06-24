@@ -23,13 +23,15 @@ public class Eater implements Runnable{
     public void run() {
         try {
             Random rand = new Random();
-            int sleep = 2500 + rand.nextInt(2500);
-            LOGGER.info(title + " ест конфету: " + candyType.getTitle() + ", за " + sleep + " мс.");
+            int sleep = 500 + rand.nextInt(1000);
+            LOGGER.info(title + " начал есть конфету: " + candyType.getTitle());
             Thread.sleep(sleep);
-            running = false;
+            LOGGER.info(title + " доел конфету: " + candyType.getTitle() + ", за " + sleep + " мс.");
         } catch (InterruptedException e) {
             LOGGER.error("Поток прерван");
         }
+
+        running = false;
     }
 
     public boolean isRunning() {

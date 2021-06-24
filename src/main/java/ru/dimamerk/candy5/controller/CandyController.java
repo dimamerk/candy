@@ -21,18 +21,14 @@ public class CandyController {
     @GetMapping("/chocolate")
     public ResponseEntity addChocolate() {
         queueService.pushToQueue(CandyType.CHOCOLATE);
+
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/caramel")
     public ResponseEntity addCaramel() {
         queueService.pushToQueue(CandyType.CARAMEL);
-        return new ResponseEntity(HttpStatus.OK);
-    }
 
-    @GetMapping("/log")
-    public ResponseEntity logQueue() {
-        queueService.logQueue();
         return new ResponseEntity(HttpStatus.OK);
     }
 

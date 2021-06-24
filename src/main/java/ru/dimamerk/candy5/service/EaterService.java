@@ -16,8 +16,6 @@ public class EaterService implements Runnable {
 
     QueueService queueService;
 
-    private Thread thread;
-
     Eater[] eaters = new Eater[EATER_COUNT];
 
     @Autowired
@@ -33,16 +31,25 @@ public class EaterService implements Runnable {
         try {
             while (true) {
                 if (!queueService.queueIsEmpty()) {
-                    for (int i = 0; i < eaters.length; i++) {
-                        Eater eater = eaters[i];
+                    for (Eater eater: eaters) {
                         if (!eater.isRunning()) {
                             CandyType candyType = queueService.queueTake();
                             eater.eatCandy(candyType);
-                            Thread.sleep(100);
-                            if (queueService.queueIsEmpty()) {
-                                LOGGER.info("Все конфеты съедены");
-                            }
                             break;
+                        }
+                    }
+                } else {
+                    if (queueService.isAdded()) {
+                        boolean allFinished = true;
+                        for (Eater eater: eaters) {
+                            if (eater.isRunning()) {
+                                allFinished = false;
+                                break;
+                            }
+                        }
+                        if (allFinished) {
+                            LOGGER.info("Пожиратели съели все конфеты");
+                            queueService.setAdded(false);
                         }
                     }
                 }
@@ -55,8 +62,7 @@ public class EaterService implements Runnable {
 
     public void start() {
         LOGGER.info("Запуск пожирателей");
-        thread = new Thread(this, "Сервис пожирателей");
-        thread.start();
+        new Thread(this, "Сервис пожирателей").start();
     }
 
 }
