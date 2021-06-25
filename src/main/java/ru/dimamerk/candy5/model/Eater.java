@@ -5,18 +5,14 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Random;
 
-public class Eater implements Runnable{
+public class Eater implements Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Eater.class);
 
-    private CandyType candyType;
+    private Candy candy;
 
-    private String title;
-
-    private boolean running = false;
-
-    public Eater(String title) {
-        this.title = title;
+    public Eater(Candy candy) {
+        this.candy = candy;
     }
 
     @Override
@@ -24,27 +20,12 @@ public class Eater implements Runnable{
         try {
             Random rand = new Random();
             int sleep = 500 + rand.nextInt(1000);
-            LOGGER.info(title + " начал есть конфету: " + candyType.getTitle());
+            LOGGER.info("Пожиратель #" + Thread.currentThread().getName() + " начал есть конфету #" + candy.hashCode() + ": " + candy.getTitle());
             Thread.sleep(sleep);
-            LOGGER.info(title + " доел конфету: " + candyType.getTitle() + ", за " + sleep + " мс.");
+            LOGGER.info("Пожиратель #" + Thread.currentThread().getName() + " доел конфету #" + candy.hashCode() + ": " + candy.getTitle() + ", за " + sleep + " мс.");
         } catch (InterruptedException e) {
             LOGGER.error("Поток прерван");
         }
-
-        running = false;
     }
 
-    public boolean isRunning() {
-        return running;
-    }
-
-    public boolean eatCandy(CandyType candyType) {
-        if (!running) {
-            running = true;
-            this.candyType = candyType;
-            new Thread(this, title).start();
-            return true;
-        }
-        return false;
-    }
 }
